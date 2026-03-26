@@ -7,23 +7,23 @@ Update the connection settings below before running any scripts.
 # ============================================================
 # DATABASE CONNECTION
 # ============================================================
-# Option 1: Windows Authentication (if running on a domain-joined machine)
+# Primary: Azure SQL Database (rasmaster)
 DB_CONFIG = {
-    "server": "YOUR_SQL_SERVER_HOST",       # e.g., "10.0.0.1" or "sqlserver.company.com"
-    "database": "YOUR_DATABASE_NAME",        # e.g., "RAS_DB"
+    "server": "rasmastertable.database.windows.net",
+    "database": "rasmaster",
     "driver": "{ODBC Driver 17 for SQL Server}",
-    "trusted_connection": True,              # True = Windows Auth, False = SQL Auth
-    # Only needed if trusted_connection = False:
-    "username": "",
-    "password": "",
+    "trusted_connection": False,             # Azure SQL requires SQL Auth
+    "username": "YOUR_USERNAME",             # <-- UPDATE THIS
+    "password": "YOUR_PASSWORD",             # <-- UPDATE THIS
 }
 
-# Option 2: If you have a second database (Arpita mentioned two databases)
+# Secondary: On-prem PRODTEST (if needed)
 DB_CONFIG_SECONDARY = {
-    "server": "YOUR_SECONDARY_SQL_SERVER",
-    "database": "YOUR_SECONDARY_DB",
+    "server": "10.193.10.111",
+    "port": "1528",
+    "database": "PRODTEST",                  # Adjust if different
     "driver": "{ODBC Driver 17 for SQL Server}",
-    "trusted_connection": True,
+    "trusted_connection": True,              # On-prem may use Windows Auth
     "username": "",
     "password": "",
 }
@@ -47,6 +47,10 @@ TABLES_TO_PROFILE = [
     "purchase_req_mst",
     "purchase_req_detail",
     "purchase_attachments",
+    "doc_clasification_metadata",    # NEW — may contain existing doc classification
+    "EXCHANGE_RATE",                 # NEW — useful for price normalization
+    "currency_mst",                  # NEW — currency master data
+    "tbl_get_ras_data_for_bidashboard",  # NEW — materialized version of BI view
 ]
 
 VIEWS_TO_PROFILE = [
@@ -55,10 +59,14 @@ VIEWS_TO_PROFILE = [
 
 # Date columns to use for filtering last N months per table
 DATE_COLUMNS = {
-    "purchase_req_mst": "ORIGINATED_ON",       # Adjust if different
-    "purchase_req_detail": "ORIGINATED_ON",     # Adjust if different
+    "purchase_req_mst": "ORIGINATED_ON",
+    "purchase_req_detail": "ORIGINATED_ON",
     "purchase_attachments": "UPLOADED_ON",
-    "vw_get_ras_data_for_bidashboard": "Originated_On",  # Adjust if different
+    "doc_clasification_metadata": None,      # Unknown — script will skip date filter
+    "EXCHANGE_RATE": None,                    # Unknown — script will skip date filter
+    "currency_mst": None,                     # Small table — no filter needed
+    "tbl_get_ras_data_for_bidashboard": "Originated_On",
+    "vw_get_ras_data_for_bidashboard": "Originated_On",
 }
 
 # ============================================================
