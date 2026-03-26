@@ -1,0 +1,18 @@
+SELECT 
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH,
+    IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME IN (
+    'purchase_req_mst',
+    'purchase_req_detail',
+    'purchase_attachments',
+    'doc_clasification_metadata',
+    'EXCHANGE_RATE',
+    'currency_mst',
+    'tbl_get_ras_data_for_bidashboard',
+    'vw_get_ras_data_for_bidashboard'
+)
+ORDER BY TABLE_NAME, ORDINAL_POSITION
